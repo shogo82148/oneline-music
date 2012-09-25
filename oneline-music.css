@@ -1,0 +1,16 @@
+body, input, textarea, pre {
+    font-size: 15px;
+    background: black;
+    color: white;
+    font-family: 'Press Start 2P', cursive;
+}
+
+pre {
+    font-size: 10px;
+}
+
+#expression {
+    width: 500px;
+    height: 100px;
+    border: 1px solid gray;
+}
