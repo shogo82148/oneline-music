@@ -312,11 +312,41 @@ function calc(a, env) {
 window.addEventListener('load', function() {
     var context = new webkitAudioContext();
     var samplerate = context.sampleRate, channel = 1, stream_length = 8192;
+    var analyser = context.createAnalyser();
     var node;
+    var canvas = document.getElementById('canvas');
+    var context2d = canvas.getContext('2d');
+    var width = canvas.width, height = canvas.height;
+    var requestAnimationFrame = window.requestAnimationFrame || window.webkitRequestAnimationFrame;
+    var timeDomainData = new Uint8Array(analyser.frequencyBinCount);
+
+    function animationLoop() {
+        var value;
+        if(document.getElementById('timeDomain').checked) {
+            analyser.getByteTimeDomainData(timeDomainData);
+        } else {
+            analyser.getByteFrequencyData(timeDomainData);
+        }
+        context2d.clearRect(0, 0, width, height);
+        context2d.strokeStyle = 'lightgreen';
+        context2d.beginPath();
+        context2d.moveTo(-9999,9909);
+        for (var i = 0; i < timeDomainData.length; ++i){
+            value = height - timeDomainData[i];
+            context2d.lineTo(i/timeDomainData.length*width,value);
+        }
+        context2d.moveTo(9999,-9999);
+        context2d.stroke();
+        requestAnimationFrame(animationLoop);
+    }
 
     function play() {
-        var t = 0;
-        var exp = parse(document.getElementById('expression').value);
+        var t = 0, exp;
+        try {
+            exp = parse(document.getElementById('expression').value);
+        } catch(e) {
+            stop();
+        }
         node = context.createJavaScriptNode(stream_length, 1, channel);
         node.onaudioprocess = function(event) {
             var data = event.outputBuffer.getChannelData(0);
@@ -329,27 +359,29 @@ window.addEventListener('load', function() {
                     data[i] = cache[tt];
                 } else {
                     try {
-                        data[i] = cache[tt] = (calc(exp, {t: tt}) & 255) / 255;
+                        data[i] = cache[tt] = ((calc(exp, {t: tt}) & 255) - 127.5) / 127.5;
                     } catch(e) {
                         stop();
                     }
                 }
             }
         };
-        node.connect(context.destination);
+        node.connect(analyser);
+        analyser.connect(context.destination);
+        animationLoop();
+        document.getElementById('play').value = 'stop';
     }
 
     function stop() {
         if(node) node.disconnect();
         node = null;
+        document.getElementById('play').value = 'play';
     }
 
     document.getElementById('play').addEventListener('click', function() {
         if(node) {
-            this.value = 'play';
             stop();
         } else {
-            this.value = 'stop';
             play();
         }
     });
