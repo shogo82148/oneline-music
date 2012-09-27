@@ -1,0 +1,87 @@
+function parse(s) {
+    var pos = 0;
+
+    return addsub();
+
+    function skipspace() {
+        var ch;
+        while(pos < s.length) {
+            ch = s.charAt(pos);
+            if(ch != ' ' && ch != '\r' && ch != '\n' && ch != '\t') break;
+            ++pos;
+        }
+    }
+
+    function number() {
+        var ch;
+        var num = '';
+        skipspace();
+        while(pos < s.length) {
+            ch = s.charAt(pos);
+            if(ch < '0' || '9' < ch) break;
+            num += ch;
+            ++pos;
+        }
+        return num|0;
+    }
+
+    function factor() {
+        skipspace();
+        if(pos >= s.length) throw "Error!";
+        var ch = s.charAt(pos);
+        if(ch=='+') {
+            ++pos;
+            return factor();
+        } else if(ch=='-') {
+            ++pos;
+            return -factor();
+        } else if(ch=='!') {
+            ++pos;
+            return factor() == 0 ? 1 : 0;
+        }
+        return number();
+    }
+
+    function term() {
+        var a = factor();
+        skipspace();
+        while(pos < s.length) {
+            var ch = s.charAt(pos);
+            if(ch=='*') {
+                ++pos;
+                a = a * factor();
+            } else if(ch=='/') {
+                ++pos;
+                a = (a / factor()) | 0;
+            } else if(ch=='%') {
+                ++pos;
+                a = a % factor();
+            } else break;
+            skipspace();
+        }
+        return a;
+    }
+
+    function addsub() {
+        var a = term();
+        skipspace();
+        while(pos < s.length) {
+            var ch = s.charAt(pos);
+            if(ch=='+') {
+                ++pos;
+                a = a + term();
+            } else if(ch=='-') {
+                ++pos;
+                a = a - term();
+            } else break;
+            skipspace();
+        }
+        return a;
+    }
+
+    function shift() {
+        
+    }
+}
+
+console.log(parse('- -1 + 3'));
