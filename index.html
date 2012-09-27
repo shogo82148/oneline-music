@@ -3,12 +3,15 @@
 <html>
 
 <head>
+<title>Music from very short programs</title>
 <link href='http://fonts.googleapis.com/css?family=Press+Start+2P' rel='stylesheet' type='text/css'>
 <link href='oneline-music.css' rel='stylesheet' type='text/css'>
 <script src="oneline-music.js"></script>
 </head>
 
 <body>
+<section>
+<h1>Music from very short programs</h1>
 <pre>
 main(t){
 for(t=0;;t++)putchar(
@@ -22,8 +25,26 @@ t*((t>>12|t>>8)&63&t>>4)
 <input id="play" type="button" value="play">
 <label><input id="freqDomain" name="domain" type="radio">Frequency</label><label><input id="timeDomain" name="domain" type="radio" checked>Time</label>
 <p>
-<canvas id="canvas" width="500" height="256"></canvas>
+<canvas id="canvas" width="800" height="256"></canvas>
 </p>
+</section>
+
+<section>
+<h1>More information</h1>
+<ul>
+  <li>Inspired by <a href="http://countercomplex.blogspot.jp/2011/10/algorithmic-symphonies-from-one-line-of.html">the work of @viznut</a></li>
+  <li>Some example videos
+    <ul>
+      <li><a href="http://www.youtube.com/watch?v=GtQdIYUtAHg">Experimental music from very short C programs</a></li>
+      <li><a href="http://www.youtube.com/watch?v=qlrs2Vorw2Y">Experimental one-line algorithmic music - the 2nd iteration</a></li>
+      <li><a href="http://www.youtube.com/watch?v=tCRPUv8V22o">Music from very short programs - the 3rd iteration</a></li>
+    </ul>
+  </li>
+  <li><a href="https://twitter.com/neko_gata_s">@neko_gata_s</a> told me the videos
+    (<a href="http://nekogata.hatenablog.com/entry/2012/09/24/030129">his blog</a>), thx!</li>
+  <li>by <a href="https://github.com/shogo82148">@shogo82148</a></li>
+</ul>
+</section>
 </body>
 
 </html>
