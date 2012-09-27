@@ -313,6 +313,7 @@ window.addEventListener('load', function() {
     var context = new webkitAudioContext();
     var samplerate = context.sampleRate, channel = 1, stream_length = 8192;
     var analyser = context.createAnalyser();
+    var lowpass = context.createBiquadFilter();
     var node;
     var canvas = document.getElementById('canvas');
     var context2d = canvas.getContext('2d');
@@ -366,7 +367,12 @@ window.addEventListener('load', function() {
                 }
             }
         };
-        node.connect(analyser);
+
+        lowpass.type = 0;
+        lowpass.frequency.value = 4000;
+
+        node.connect(lowpass);
+        lowpass.connect(analyser);
         analyser.connect(context.destination);
         animationLoop();
         document.getElementById('play').value = 'stop';
@@ -385,4 +391,16 @@ window.addEventListener('load', function() {
             play();
         }
     });
+
+    function hashchange() {
+        var hash;
+        if(location.hash) {
+            hash = location.hash.substring(1);
+            document.getElementById('expression').value = hash;
+        }
+    }
+
+    window.addEventListener('hashchange', hashchange, false);
+    hashchange();
+
 });
