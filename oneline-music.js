@@ -348,6 +348,7 @@ window.addEventListener('load', function() {
         } catch(e) {
             stop();
         }
+        location.hash = '#' + document.getElementById('expression').value;
         node = context.createJavaScriptNode(stream_length, 1, channel);
         node.onaudioprocess = function(event) {
             var data = event.outputBuffer.getChannelData(0);
@@ -398,6 +399,8 @@ window.addEventListener('load', function() {
             hash = location.hash.substring(1);
             document.getElementById('expression').value = hash;
         }
+        var shareurl = 'https://twitter.com/share?url=' + encodeURIComponent(location.href);
+        document.getElementById('sharelink').href = shareurl;
     }
 
     window.addEventListener('hashchange', hashchange, false);
